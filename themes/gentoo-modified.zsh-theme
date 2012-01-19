@@ -1,3 +1,5 @@
+# ZSH Theme emulating the Fish shell's default prompt.
+
 PROMPT='%(!.%{$fg_bold[red]%}.%F{white}%n):%{$fg_bold[blue]%}%d %# %{$reset_color%}'
 RPROMPT='$(git_prompt_info)'
 
