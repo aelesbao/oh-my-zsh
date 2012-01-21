@@ -46,7 +46,7 @@ RPROMPT='$(git_prompt_info)'
 MODE_INDICATOR="%{$fg_bold[red]%}<%{$fg[red]%}<<%{$reset_color%}"
 
 # git theming
-local git_prompt_guard_color=$reset_color$FG[142];
+local git_prompt_guard_color=$reset_color$FG[143];
 local git_prompt_branch_color=$reset_color$FG[215];
 local git_prompt_untracked_color=$bold_color$FG[160];
 local git_prompt_modified_color=$bold_color$FG[190];
