@@ -33,22 +33,39 @@ git_stash_info() {
   echo $STATUS
 }
 
-local user_color='white'; [ $UID -eq 0 ] && user_color='red'
-PROMPT='%{$fg_bold[$user_color]%}%n%{$reset_color%}:%{$fg_bold[blue]%}${PWD/#$HOME/~} %{$reset_color%}%(!.#.૱) '
-PROMPT2='%{$fg[red]%}\ %{$reset_color%}'
+local user_color=$FG[157]; [ $UID -eq 0 ] && user_color=$FG[160]
+local pwd_color=$bold_color$FG[111];
+local ps2_color=$FG[196];
+
+PROMPT='%{$bold_color%}%{$user_color%}%n%{$reset_color%}։%{$pwd_color%}${PWD/#$HOME/~} %{$reset_color%}%(!.#.૱ ) '
+PROMPT2='%{$ps2_color%}⁝ %{$reset_color%}'
 
 RPROMPT='$(git_prompt_info)'
 
+# vi-mode
+MODE_INDICATOR="%{$fg_bold[red]%}<%{$fg[red]%}<<%{$reset_color%}"
+
 # git theming
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[blue]%}[%{$fg_no_bold[yellow]%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg_no_bold[blue]%}]%{$reset_color%}"
+local git_prompt_guard_color=$reset_color$FG[142];
+local git_prompt_branch_color=$reset_color$FG[215];
+local git_prompt_untracked_color=$bold_color$FG[160];
+local git_prompt_modified_color=$bold_color$FG[190];
+local git_prompt_added_color=$bold_color$FG[048];
+local git_prompt_stashed_color=$bold_color$FG[147];
+local git_prompt_unmerged_color=$bold_color$FG[120];
+local git_prompt_upstream_color=$bold_color$FG[039];
+
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$git_prompt_guard_color%}(%{$git_prompt_branch_color%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$git_prompt_guard_color%})%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 ZSH_THEME_GIT_PROMPT_DIRTY=""
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg_bold[red]%}•"
-ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg_bold[yellow]%}•"
-ZSH_THEME_GIT_PROMPT_ADDED="%{$fg_bold[green]%}•"
-ZSH_THEME_GIT_PROMPT_STASHED="%{$fg_bold[cyan]%}⚡"
+
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$git_prompt_untracked_color%}•"
+ZSH_THEME_GIT_PROMPT_MODIFIED="%{$git_prompt_modified_color%}•"
+ZSH_THEME_GIT_PROMPT_ADDED="%{$git_prompt_added_color%}•"
+ZSH_THEME_GIT_PROMPT_STASHED="%{$git_prompt_stashed_color%}⚡"
+ZSH_THEME_GIT_PROMPT_UNMERGED="%{$git_prompt_unmerged_color%}═"
 ZSH_THEME_GIT_PROMPT_UPSTREAM_EQUAL=""
-ZSH_THEME_GIT_PROMPT_UPSTREAM_AHEAD="%{$fg_bold[cyan]%}→"
-ZSH_THEME_GIT_PROMPT_UPSTREAM_BEHIND="%{$fg_bold[cyan]%}←"
-ZSH_THEME_GIT_PROMPT_UPSTREAM_DIVERGED="%{$fg_bold[cyan]%}↔"
+ZSH_THEME_GIT_PROMPT_UPSTREAM_AHEAD="%{$git_prompt_upstream_color%}»"
+ZSH_THEME_GIT_PROMPT_UPSTREAM_BEHIND="%{$git_prompt_upstream_color%}«"
+ZSH_THEME_GIT_PROMPT_UPSTREAM_DIVERGED="%{$git_prompt_upstream_color%}«»"
