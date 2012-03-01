@@ -1,6 +1,4 @@
-if git fetch robbyrussell master
+if git pull robbyrussell master
 then
-  git merge robbyrussell/master
+  git push origin master
 fi
-git push origin master
-git pull --rebase
