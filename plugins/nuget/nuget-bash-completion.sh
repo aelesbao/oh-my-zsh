@@ -20,8 +20,8 @@ _invoke_operation_completion()
     done
 
     case "$prev" in
-    # base commands for nuget
-    delete|install|list|pack|publish|push|setApiKeysources|spec|update|help)
+      # base commands for nuget
+      delete|install|list|pack|publish|push|setApiKeysources|spec|update|help)
         # handle standard -options
         if [[ "$prev" == "help" && "$cur" == -* ]]; then
             local opts=$(
@@ -34,8 +34,6 @@ _invoke_operation_completion()
             COMPREPLY=( $(compgen -W "$opts" -- ${cur}) )
             return
         fi
-        local ff=$(\ls ./packages | sed -e "s/\.dll//g")
-         COMPREPLY=( $(compgen -W "${ff}" -- ${cur}) )
         return
         ;;
     esac
