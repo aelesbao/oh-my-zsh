@@ -37,7 +37,7 @@ local user_color=$FG[157]; [ $UID -eq 0 ] && user_color=$FG[160]
 local pwd_color=$bold_color$FG[111];
 local ps2_color=$FG[196];
 
-PROMPT='%{$bold_color%}%{$user_color%}%n%{$reset_color%}։%{$pwd_color%}${PWD/#$HOME/~} %{$reset_color%}%(!.#.૱ ) '
+PROMPT='%{$bold_color%}%{$user_color%}%n%{$reset_color%}:%{$pwd_color%}${PWD/#$HOME/~} %{$reset_color%}%(!.#.૱ ) '
 PROMPT2='%{$ps2_color%}⁝ %{$reset_color%}'
 
 RPROMPT='$(git_prompt_info)'
