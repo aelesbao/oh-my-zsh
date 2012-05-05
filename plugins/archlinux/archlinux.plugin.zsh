@@ -49,6 +49,7 @@ alias pacupg='sudo pacman -Syu'        # Synchronize with repositories before up
 alias pacins='sudo pacman -U'          # Install specific package not from the repositories but from a file 
 alias pacre='sudo pacman -R'           # Remove the specified package(s), retaining its configuration(s) and required dependencies
 alias pacrem='sudo pacman -Rns'        # Remove the specified package(s), its configuration(s) and unneeded dependencies
+alias pacremdep='sudo pacman -Rcns'    # Remove the specified package(s), its configuration(s) and all dependencies
 alias pacloc='pacman -Qi'              # Display information about a given package in the local database
 alias paclocs='pacman -Qs'             # Search for package(s) in the local database
 # Additional pacman alias examples
