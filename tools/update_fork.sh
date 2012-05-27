@@ -1,4 +1,2 @@
-if git pull robbyrussell master
-then
-  git push origin master
-fi
+git pull --rebase
+git pull robbyrussell master && git rebase origin/master && git push
