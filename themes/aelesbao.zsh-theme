@@ -1,4 +1,5 @@
-# ZSH theme inspired by arthurgeek theme.
+# theme by Augusto Elesbão (http://github.com/aelesbao)
+# inspired on arthurgeek's theme.
 
 # Add the branch name and the working tree status information
 git_prompt_info () {
@@ -36,18 +37,24 @@ git_stash_info() {
 local user_color=$FG[157]; [ $UID -eq 0 ] && user_color=$FG[160]
 local pwd_color=$bold_color$FG[111];
 local ps2_color=$FG[196];
+local time_color=$user_color;
 
 local user_prompt=$(echo -e "\xE0\xA5\x90\ ")
 PROMPT='%{$bold_color%}%{$user_color%}%n%{$reset_color%}:%{$pwd_color%}${PWD/#$HOME/~} %{$reset_color%}%(!.#.$user_prompt) '
 PROMPT2='%{$ps2_color%}⁝ %{$reset_color%}'
 
-RPROMPT='$(git_prompt_info)'
+RPROMPT='$(git_prompt_info)$(svn_prompt_info) %{$time_color%}%D{[%I:%M:%S]}%{$reset_color%}'
+
+ZSH_PROMPT_BASE_COLOR="%{$fg_bold[blue]%}"
+ZSH_THEME_REPO_NAME_COLOR="%{$fg_bold[red]%}"
 
 # vi-mode
 MODE_INDICATOR="%{$fg_bold[red]%}<%{$fg[red]%}<<%{$reset_color%}"
 
+# generic scm colors
+local scm_prompt_guard_color=$reset_color$FG[143];
+
 # git theming
-local git_prompt_guard_color=$reset_color$FG[143];
 local git_prompt_branch_color=$reset_color$FG[215];
 local git_prompt_untracked_color=$bold_color$FG[160];
 local git_prompt_modified_color=$bold_color$FG[190];
@@ -56,8 +63,8 @@ local git_prompt_stashed_color=$bold_color$FG[147];
 local git_prompt_unmerged_color=$bold_color$FG[120];
 local git_prompt_upstream_color=$bold_color$FG[039];
 
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$git_prompt_guard_color%}±(%{$git_prompt_branch_color%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$git_prompt_guard_color%})%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$scm_prompt_guard_color%}±(%{$git_prompt_branch_color%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$scm_prompt_guard_color%})%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 ZSH_THEME_GIT_PROMPT_DIRTY=""
 
@@ -70,3 +77,15 @@ ZSH_THEME_GIT_PROMPT_UPSTREAM_EQUAL=""
 ZSH_THEME_GIT_PROMPT_UPSTREAM_AHEAD="%{$git_prompt_upstream_color%}»"
 ZSH_THEME_GIT_PROMPT_UPSTREAM_BEHIND="%{$git_prompt_upstream_color%}«"
 ZSH_THEME_GIT_PROMPT_UPSTREAM_DIVERGED="%{$git_prompt_upstream_color%}«»"
+
+# hg theming
+ZSH_THEME_HG_PROMPT_PREFIX="%{$scm_prompt_guard_color%}☿("
+ZSH_THEME_HG_PROMPT_SUFFIX="%{$scm_prompt_guard_color%})%{$reset_color%}"
+ZSH_THEME_HG_PROMPT_DIRTY="%{$fg[red]%}•%{$reset_color%}"
+ZSH_THEME_HG_PROMPT_CLEAN=""
+
+# svn theming
+ZSH_THEME_SVN_PROMPT_PREFIX="%{$scm_prompt_guard_color%}svn("
+ZSH_THEME_SVN_PROMPT_SUFFIX="%{$scm_prompt_guard_color%})%{$reset_color%}"
+ZSH_THEME_SVN_PROMPT_DIRTY="%{$fg[red]%}•%{$reset_color%}"
+ZSH_THEME_SVN_PROMPT_CLEAN=""
