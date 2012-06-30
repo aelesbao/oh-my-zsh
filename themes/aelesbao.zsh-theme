@@ -5,6 +5,48 @@
 #   - arthurgeek
 #   - nicoulaj
 
+local user_color=$FG[157]; [ $UID -eq 0 ] && user_color=$FG[160]
+local pwd_color=$bold_color$FG[111];
+local ps2_color=$FG[196];
+local time_color=$user_color;
+
+local user_prompt=$(echo -e "\xE0\xA5\x90\ ")
+
+# generic scm colors
+local scm_prompt_guard_color=$reset_color$FG[143];
+local scm_prompt_branch_color=$reset_color$FG[215];
+local scm_prompt_action_color=$reset_color$FG[214];
+local scm_prompt_untracked_color=$bold_color$FG[160];
+local scm_prompt_modified_color=$bold_color$FG[190];
+local scm_prompt_added_color=$bold_color$FG[048];
+local scm_prompt_stashed_color=$bold_color$FG[147];
+local scm_prompt_unmerged_color=$bold_color$FG[120];
+local scm_prompt_upstream_color=$bold_color$FG[039];
+
+ZSH_THEME_REPO_NAME_COLOR=$scm_prompt_branch_color;
+
+# git theming
+ZSH_THEME_GIT_PROMPT_CLEAN=""
+ZSH_THEME_GIT_PROMPT_DIRTY=""
+
+ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$scm_prompt_untracked_color%}•"
+ZSH_THEME_GIT_PROMPT_MODIFIED="%{$scm_prompt_modified_color%}•"
+ZSH_THEME_GIT_PROMPT_ADDED="%{$scm_prompt_added_color%}•"
+ZSH_THEME_GIT_PROMPT_STASHED="%{$scm_prompt_stashed_color%}⚡"
+ZSH_THEME_GIT_PROMPT_UNMERGED="%{$scm_prompt_unmerged_color%}≢"
+ZSH_THEME_GIT_PROMPT_UPSTREAM_EQUAL=""
+ZSH_THEME_GIT_PROMPT_UPSTREAM_AHEAD="%{$scm_prompt_upstream_color%}»"
+ZSH_THEME_GIT_PROMPT_UPSTREAM_BEHIND="%{$scm_prompt_upstream_color%}«"
+ZSH_THEME_GIT_PROMPT_UPSTREAM_DIVERGED="%{$scm_prompt_upstream_color%}«»"
+
+# hg theming
+ZSH_THEME_HG_PROMPT_DIRTY="%{$scm_prompt_modified_color%}•"
+ZSH_THEME_HG_PROMPT_CLEAN=""
+
+# svn theming
+ZSH_THEME_SVN_PROMPT_DIRTY="%{$scm_prompt_modified_color%}•"
+ZSH_THEME_SVN_PROMPT_CLEAN=""
+
 # Set required options.
 setopt promptsubst
 
@@ -16,18 +58,36 @@ autoload -Uz vcs_info
 add-zsh-hook precmd vcs_info
 
 # Set vcs_info parameters.
-zstyle ':vcs_info:*' enable hg bzr git
+zstyle ':vcs_info:*' enable git hg bzr svn
 zstyle ':vcs_info:*:*' check-for-changes true # Can be slow on big repos.
-zstyle ':vcs_info:*:*' unstagedstr '!'
-zstyle ':vcs_info:*:*' stagedstr '+'
-zstyle ':vcs_info:*:*' actionformats "%S" "%r/%s/%b %u%c (%a)"
-zstyle ':vcs_info:*:*' formats "%S" "%r/%s/%b %u%c"
-zstyle ':vcs_info:*:*' nvcsformats "%~" ""
 
-# Add the branch name and the working tree status information
-git_prompt_info () {
-  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(parse_git_dirty)$(git_prompt_status)$(git_stash_info)$(git_upstream_info)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+zstyle ':vcs_info:*:*' stagedstr   "%{$scm_prompt_added_color%}•"
+zstyle ':vcs_info:*:*' unstagedstr "%{$scm_prompt_modified_color%}•"
+
+zstyle ':vcs_info:*:*' formats       "%S" "%{$scm_prompt_guard_color%}%s(%{$scm_prompt_branch_color%}%b%m%u%c%{$scm_prompt_guard_color%})%{$reset_color%}"
+zstyle ':vcs_info:*:*' actionformats "%S" "%{$scm_prompt_guard_color%}%s(%{$scm_prompt_branch_color%}%b%m%u%c%{$scm_prompt_action_color%}:%a%{$scm_prompt_guard_color%})%{$reset_color%}"
+
+zstyle ':vcs_info:(svn|bzr):*' branchformat "%b%{$scm_prompt_action_color%}:%r"
+
+zstyle ':vcs_info:git+set-message:*' hooks git-prompt-info
+zstyle ':vcs_info:svn+set-message:*' hooks svn-prompt-info
+zstyle ':vcs_info:hg+set-message:*'  hooks hg-prompt-info
+
+zstyle ':vcs_info:*+*:*' debug false
+
++vi-git-prompt-info() {
+  hook_com[vcs]='±'
+  hook_com[staged]=''
+  hook_com[unstaged]=''
+  hook_com[misc]="$(parse_git_dirty)$(git_prompt_status)$(git_stash_info)$(git_upstream_info)"
+}
+
++vi-svn-prompt-info() {
+  hook_com[vcs]='⚡'
+}
+
++vi-hg-prompt-info() {
+  hook_com[vcs]='☿'
 }
 
 # show the differences between HEAD and its upstream
@@ -57,58 +117,11 @@ git_stash_info() {
   echo $STATUS
 }
 
-ZSH_PROMPT_BASE_COLOR="%{$fg_bold[blue]%}"
-
-local user_color=$FG[157]; [ $UID -eq 0 ] && user_color=$FG[160]
-local pwd_color=$bold_color$FG[111];
-local ps2_color=$FG[196];
-local time_color=$user_color;
-
-local user_prompt=$(echo -e "\xE0\xA5\x90\ ")
+# prompts
 PROMPT='%{$bold_color%}%{$user_color%}%n%{$reset_color%}:%{$pwd_color%}${PWD/#$HOME/~} %{$reset_color%}%(!.#.$user_prompt) '
 PROMPT2='%{$ps2_color%}⁝ %{$reset_color%}'
 
-RPROMPT='$(git_prompt_info)$(svn_prompt_info) %{$time_color%}%D{[%H:%M:%S]}%{$reset_color%}'
+RPROMPT='${vcs_info_msg_1_} %{$time_color%}%D{[%H:%M:%S]}%{$reset_color%}'
 
 # vi-mode
 MODE_INDICATOR="%{$fg_bold[red]%}<%{$fg[red]%}<<%{$reset_color%}"
-
-# generic scm colors
-local scm_prompt_guard_color=$reset_color$FG[143];
-local scm_prompt_branch_color=$reset_color$FG[215];
-ZSH_THEME_REPO_NAME_COLOR=$scm_prompt_branch_color;
-
-# git theming
-local git_prompt_untracked_color=$bold_color$FG[160];
-local git_prompt_modified_color=$bold_color$FG[190];
-local git_prompt_added_color=$bold_color$FG[048];
-local git_prompt_stashed_color=$bold_color$FG[147];
-local git_prompt_unmerged_color=$bold_color$FG[120];
-local git_prompt_upstream_color=$bold_color$FG[039];
-
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$scm_prompt_guard_color%}±(%{$scm_prompt_branch_color%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$scm_prompt_guard_color%})%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_CLEAN=""
-ZSH_THEME_GIT_PROMPT_DIRTY=""
-
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$git_prompt_untracked_color%}•"
-ZSH_THEME_GIT_PROMPT_MODIFIED="%{$git_prompt_modified_color%}•"
-ZSH_THEME_GIT_PROMPT_ADDED="%{$git_prompt_added_color%}•"
-ZSH_THEME_GIT_PROMPT_STASHED="%{$git_prompt_stashed_color%}⚡"
-ZSH_THEME_GIT_PROMPT_UNMERGED="%{$git_prompt_unmerged_color%}≢"
-ZSH_THEME_GIT_PROMPT_UPSTREAM_EQUAL=""
-ZSH_THEME_GIT_PROMPT_UPSTREAM_AHEAD="%{$git_prompt_upstream_color%}»"
-ZSH_THEME_GIT_PROMPT_UPSTREAM_BEHIND="%{$git_prompt_upstream_color%}«"
-ZSH_THEME_GIT_PROMPT_UPSTREAM_DIVERGED="%{$git_prompt_upstream_color%}«»"
-
-# hg theming
-ZSH_THEME_HG_PROMPT_PREFIX="%{$scm_prompt_guard_color%}☿("
-ZSH_THEME_HG_PROMPT_SUFFIX="%{$scm_prompt_guard_color%})%{$reset_color%}"
-ZSH_THEME_HG_PROMPT_DIRTY="%{$fg[red]%}•%{$reset_color%}"
-ZSH_THEME_HG_PROMPT_CLEAN=""
-
-# svn theming
-ZSH_THEME_SVN_PROMPT_PREFIX="%{$scm_prompt_guard_color%}⚡("
-ZSH_THEME_SVN_PROMPT_SUFFIX="%{$scm_prompt_guard_color%})%{$reset_color%}"
-ZSH_THEME_SVN_PROMPT_DIRTY="%{$fg[red]%}•%{$reset_color%}"
-ZSH_THEME_SVN_PROMPT_CLEAN=""
