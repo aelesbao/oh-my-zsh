@@ -2,7 +2,7 @@
 # Usage is also described at https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins
 
 # Look for yaourt, and add some useful functions if we have it.
-if [[ -x `which yaourt` ]]; then
+if [ -n "`command -v yaourt`" ]; then
   upgrade() {
     yaourt -Syu
   }
@@ -18,16 +18,18 @@ if [[ -x `which yaourt` ]]; then
   alias yareps='yaourt -Ss'        # Search for package(s) in the repositories
   alias yaloc='yaourt -Qi'         # Display information about a given package in the local database
   alias yalocs='yaourt -Qs'        # Search for package(s) in the local database
+
   # Additional yaourt alias examples
-  if [[ -x `which abs` ]]; then
+  if [ -n "`command -v abs`" ]; then
     alias yaupd='yaourt -Sy && sudo abs'   # Update and refresh the local package and ABS databases against repositories
   else
     alias yaupd='yaourt -Sy'               # Update and refresh the local package and ABS databases against repositories
   fi
+
   alias yainsd='yaourt -S --asdeps'        # Install given package(s) as dependencies of another package
   alias yamir='yaourt -Syy'                # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist
 
-elif [[ -x `which packer` ]]; then
+elif [ -n "`command -v packer`" ]; then
   upgrade() {
     packer -Syu
   }
@@ -52,12 +54,14 @@ alias pacrem='sudo pacman -Rns'        # Remove the specified package(s), its co
 alias pacremdep='sudo pacman -Rcns'    # Remove the specified package(s), its configuration(s) and all dependencies
 alias pacloc='pacman -Qi'              # Display information about a given package in the local database
 alias paclocs='pacman -Qs'             # Search for package(s) in the local database
+
 # Additional pacman alias examples
-if [[ -x `which abs` ]]; then
+if [ -n "`command -v abs`" ]; then
   alias pacupd='sudo pacman -Sy && sudo abs'     # Update and refresh the local package and ABS databases against repositories
 else
   alias pacupd='sudo pacman -Sy'     # Update and refresh the local package and ABS databases against repositories
 fi
+
 alias pacinsd='sudo pacman -S --asdeps'        # Install given package(s) as dependencies of another package
 alias pacmir='sudo pacman -Syy'                # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist
 
