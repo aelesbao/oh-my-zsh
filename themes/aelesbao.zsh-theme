@@ -118,7 +118,7 @@ git_stash_info() {
 }
 
 # prompts
-PROMPT='%{$bold_color%}%{$user_color%}%n%{$reset_color%}:%{$pwd_color%}${PWD/#$HOME/~} %{$reset_color%}%(!.#.$user_prompt) '
+PROMPT='%{$pwd_color%}${PWD/#$HOME/~} %{$user_color%}%(!.#.$user_prompt)%{$reset_color%} '
 PROMPT2='%{$ps2_color%}⁝ %{$reset_color%}'
 
 RPROMPT='${vcs_info_msg_1_} %{$time_color%}%D{[%H:%M:%S]}%{$reset_color%}'
