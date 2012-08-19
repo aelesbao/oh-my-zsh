@@ -32,9 +32,10 @@ ZSH_THEME_GIT_PROMPT_DIRTY=""
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$scm_prompt_untracked_color%}•"
 ZSH_THEME_GIT_PROMPT_MODIFIED="%{$scm_prompt_modified_color%}•"
 ZSH_THEME_GIT_PROMPT_ADDED="%{$scm_prompt_staged_color%}•"
-ZSH_THEME_GIT_PROMPT_DELETED="%{$scm_prompt_staged_color%}•"
-ZSH_THEME_GIT_PROMPT_STASHED="%{$scm_prompt_stashed_color%}⚡"
-ZSH_THEME_GIT_PROMPT_UNMERGED="%{$scm_prompt_unmerged_color%}≢"
+ZSH_THEME_GIT_PROMPT_DELETED="%{$scm_prompt_staged_color%}×"
+ZSH_THEME_GIT_PROMPT_RENAMED="%{$scm_prompt_staged_color%}➜"
+ZSH_THEME_GIT_PROMPT_STASHED="%{$scm_prompt_stashed_color%}↯"
+ZSH_THEME_GIT_PROMPT_UNMERGED="%{$scm_prompt_unmerged_color%}⇄"
 ZSH_THEME_GIT_PROMPT_UPSTREAM_EQUAL=""
 ZSH_THEME_GIT_PROMPT_UPSTREAM_AHEAD="%{$scm_prompt_upstream_color%}»"
 ZSH_THEME_GIT_PROMPT_UPSTREAM_BEHIND="%{$scm_prompt_upstream_color%}«"
@@ -59,8 +60,10 @@ autoload -Uz vcs_info
 add-zsh-hook precmd vcs_info
 
 # Set vcs_info parameters.
-zstyle ':vcs_info:*' enable git hg bzr svn
-zstyle ':vcs_info:*:*' check-for-changes true # Can be slow on big repos.
+zstyle ':vcs_info:*'     enable git hg bzr svn
+
+zstyle ':vcs_info:*:*'   check-for-changes true  # can be slow on big repos.
+zstyle ':vcs_info:git:*' check-for-changes false # for git we use oh-my-zsh implementation.
 
 zstyle ':vcs_info:*:*' stagedstr   "%{$scm_prompt_staged_color%}•"
 zstyle ':vcs_info:*:*' unstagedstr "%{$scm_prompt_modified_color%}•"
