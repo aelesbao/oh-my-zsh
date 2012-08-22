@@ -5,12 +5,12 @@
 #   - arthurgeek
 #   - nicoulaj
 
-local user_color=$FG[157]; [ $UID -eq 0 ] && user_color=$FG[160]
+local user_color=$FG[157]; [ $UID -eq 0  ] && user_color=$FG[160]
 local pwd_color=$bold_color$FG[111];
 local ps2_color=$FG[196];
 local time_color=$user_color;
 
-local user_prompt=$(echo -e "\xE0\xA5\x90\ ")
+local user_prompt="$"
 
 # generic scm colors
 local scm_prompt_guard_color=$reset_color$FG[143];
@@ -18,7 +18,7 @@ local scm_prompt_branch_color=$reset_color$FG[215];
 local scm_prompt_action_color=$reset_color$FG[214];
 local scm_prompt_untracked_color=$bold_color$FG[160];
 local scm_prompt_modified_color=$bold_color$FG[190];
-local scm_prompt_added_color=$bold_color$FG[048];
+local scm_prompt_staged_color=$bold_color$FG[048];
 local scm_prompt_stashed_color=$bold_color$FG[147];
 local scm_prompt_unmerged_color=$bold_color$FG[120];
 local scm_prompt_upstream_color=$bold_color$FG[039];
@@ -31,7 +31,8 @@ ZSH_THEME_GIT_PROMPT_DIRTY=""
 
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$scm_prompt_untracked_color%}•"
 ZSH_THEME_GIT_PROMPT_MODIFIED="%{$scm_prompt_modified_color%}•"
-ZSH_THEME_GIT_PROMPT_ADDED="%{$scm_prompt_added_color%}•"
+ZSH_THEME_GIT_PROMPT_ADDED="%{$scm_prompt_staged_color%}•"
+ZSH_THEME_GIT_PROMPT_DELETED="%{$scm_prompt_staged_color%}•"
 ZSH_THEME_GIT_PROMPT_STASHED="%{$scm_prompt_stashed_color%}⚡"
 ZSH_THEME_GIT_PROMPT_UNMERGED="%{$scm_prompt_unmerged_color%}≢"
 ZSH_THEME_GIT_PROMPT_UPSTREAM_EQUAL=""
@@ -61,7 +62,7 @@ add-zsh-hook precmd vcs_info
 zstyle ':vcs_info:*' enable git hg bzr svn
 zstyle ':vcs_info:*:*' check-for-changes true # Can be slow on big repos.
 
-zstyle ':vcs_info:*:*' stagedstr   "%{$scm_prompt_added_color%}•"
+zstyle ':vcs_info:*:*' stagedstr   "%{$scm_prompt_staged_color%}•"
 zstyle ':vcs_info:*:*' unstagedstr "%{$scm_prompt_modified_color%}•"
 
 zstyle ':vcs_info:*:*' formats       "%S" "%{$scm_prompt_guard_color%}%s(%{$scm_prompt_branch_color%}%b%m%u%c%{$scm_prompt_guard_color%})%{$reset_color%}"
@@ -76,18 +77,18 @@ zstyle ':vcs_info:hg+set-message:*'  hooks hg-prompt-info
 zstyle ':vcs_info:*+*:*' debug false
 
 +vi-git-prompt-info() {
-  hook_com[vcs]='±'
-  hook_com[staged]=''
-  hook_com[unstaged]=''
+  hook_com[vcs]="±"
+  hook_com[staged]=""
+  hook_com[unstaged]=""
   hook_com[misc]="$(parse_git_dirty)$(git_prompt_status)$(git_stash_info)$(git_upstream_info)"
 }
 
 +vi-svn-prompt-info() {
-  hook_com[vcs]='⚡'
+  hook_com[vcs]="⚡"
 }
 
 +vi-hg-prompt-info() {
-  hook_com[vcs]='☿'
+  hook_com[vcs]="☿"
 }
 
 # show the differences between HEAD and its upstream
@@ -121,7 +122,7 @@ git_stash_info() {
 PROMPT='%{$pwd_color%}${PWD/#$HOME/~} %{$user_color%}%(!.#.$user_prompt)%{$reset_color%} '
 PROMPT2='%{$ps2_color%}⁝ %{$reset_color%}'
 
-RPROMPT='${vcs_info_msg_1_} %{$time_color%}%D{[%H:%M:%S]}%{$reset_color%}'
+RPROMPT='${vcs_info_msg_1_} %{$time_color%}[%D{%T}]%{$reset_color%}'
 
 # vi-mode
 MODE_INDICATOR="%{$fg_bold[red]%}<%{$fg[red]%}<<%{$reset_color%}"
