@@ -56,6 +56,8 @@ else
  alias pacrem='sudo pacman -Rns'        # Remove the specified package(s), its configuration(s) and unneeded dependencies
  alias pacloc='pacman -Qi'              # Display information about a given package in the local database
  alias paclocs='pacman -Qs'             # Search for package(s) in the local database
+ alias pacown='pacman -Qo'              # Searches for package that owns file
+ alias paclist='pacman -Ql'             # List package files
 
  # Additional pacman alias examples
  if [ -n "`command -v abs`" ]; then
