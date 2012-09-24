@@ -22,6 +22,7 @@ if [ -n "${remote_track}" ]; then
   echo "Merging with ${remote_track}/master"
   (git fetch ${remote_track} master && git merge ${remote_track}/master) || {
     echo "Failed to integrate changes on ${remote_track}"
+    git reset --hard HEAD
     exit -1
   }
 fi
