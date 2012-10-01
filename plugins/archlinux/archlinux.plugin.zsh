@@ -22,6 +22,8 @@ if [ -n "`command -v yaourt`" ]; then
   alias pacreps='yaourt -Ss'        # Search for package(s) in the repositories
   alias pacloc='yaourt -Qi'         # Display information about a given package in the local database
   alias paclocs='yaourt -Qs'        # Search for package(s) in the local database
+  alias pacloco='yaourt -Qo'        # Searches for package that owns file
+  alias paclocl='yaourt -Ql'        # List package files
 
   # Additional yaourt alias examples
   if [ -n "`command -v abs`" ]; then
